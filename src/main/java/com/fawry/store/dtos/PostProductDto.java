@@ -12,4 +12,5 @@ public class PostProductDto {
 
     double price;
 
+    boolean isInStock;
 }

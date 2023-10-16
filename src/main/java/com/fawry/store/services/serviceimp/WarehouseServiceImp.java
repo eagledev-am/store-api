@@ -176,11 +176,11 @@ public class WarehouseServiceImp implements WarehouseService {
 
 
     @Override
-    public List<PostProductDto> consumeProducts(long warehouseId, Map<Integer, Integer> IdsQuantity) {
+    public List<PostProductDtoQuantity> consumeProducts(long warehouseId, Map<Integer, Integer> IdsQuantity) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
         List<Inventory> inventories = warehouse.getInventories();
 
-        List<PostProductDto> consumedProducts = new ArrayList<>();
+        List<PostProductDtoQuantity> consumedProducts = new ArrayList<>();
 
         for ( Map.Entry<Integer , Integer> map : IdsQuantity.entrySet()) {
             consumedProducts.add(getConsumedProduct(warehouse , inventories , map.getKey() , map.getValue()));
@@ -188,9 +188,22 @@ public class WarehouseServiceImp implements WarehouseService {
         return consumedProducts;
     }
 
+    @Override
+    public List<PostProductDto> checkStockOfConsumedProduct(long warehouseId, Map<Integer, Integer> idsQuantity) {
+        Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
+        List<Inventory> inventories = warehouse.getInventories();
+
+        List<PostProductDto> consumedProducts = new ArrayList<>();
+
+        for ( Map.Entry<Integer , Integer> map : idsQuantity.entrySet()) {
+            consumedProducts.add(getCheckedConsumedProd(inventories , map.getKey() , map.getValue()));
+        }
+        return consumedProducts;
+    }
+
 
     @Override
-    public PostProductDto consumeProduct(long warehouseId, long productId, long consumeQuan) {
+    public PostProductDtoQuantity consumeProduct(long warehouseId, long productId, long consumeQuan) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
         List<Inventory> inventories = warehouse.getInventories();
         return getConsumedProduct(warehouse , inventories , productId , consumeQuan);
@@ -249,7 +262,7 @@ public class WarehouseServiceImp implements WarehouseService {
                 .toList();
     }
 
-    private PostProductDto getConsumedProduct(Warehouse warehouse , List<Inventory> inventories , long productId, long consumeQuan){
+    private PostProductDtoQuantity getConsumedProduct(Warehouse warehouse , List<Inventory> inventories , long productId, long consumeQuan){
 
         List<Inventory> warehouseInventoryOfProduct =  getInventoryOfProduct(inventories , productId);
 
@@ -266,14 +279,38 @@ public class WarehouseServiceImp implements WarehouseService {
             throw new ConsumeProductException(QUANTITY_GREATER_THAN_STOCK + " " + "Quantity = " + inventory.getProductQuantity());
         }
 
-        PostProductDto product= (PostProductDto) productData.fetchProduct(ProductDtoEnum.POST , productId);
+        Product product = inventory.getProduct();
 
         inventory.setProductQuantity(inventory.getProductQuantity() - consumeQuan);
         StockHistory history = makeStockHistory(inventory , consumeQuan);
         history.setStockEnum(StockEnum.CONSUME);
+        history.setInventory(inventory);
         inventory.addHistory(history);
         repo.save(warehouse);
 
+        PostProductDtoQuantity productDtoQuantity = new PostProductDtoQuantity();
+        productDtoQuantity.setId(product.getId());
+        productDtoQuantity.setName(product.getName());
+        productDtoQuantity.setQuantity(consumeQuan);
+
+        return productDtoQuantity;
+    }
+
+
+    private PostProductDto getCheckedConsumedProd(List<Inventory> inventories ,long productId, long quantity){
+        List<Inventory> warehouseInventoryOfProduct =  getInventoryOfProduct(inventories , productId);
+
+        if (warehouseInventoryOfProduct.isEmpty()){
+            throw new NoSuchEntityException(PRODUCT_NOT_FOUND);
+        }
+
+        Inventory inventory = warehouseInventoryOfProduct.get(0);
+        PostProductDto product= (PostProductDto) productData.fetchProduct(ProductDtoEnum.POST , productId);
+        if(inventory.getProductQuantity() == 0 || inventory.getProductQuantity() < quantity){
+            product.setInStock(false);
+        }else {
+            product.setInStock(true);
+        }
         return product;
     }
 

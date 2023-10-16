@@ -57,18 +57,6 @@ public class FetchProductData {
         return null;
     }
 
-    public Mono<List> fetchProductsOfWarehouse(List<Long> ids){
-        WebClient webClient = WebClient.create(URL);
-        Mono<List> productDtoMono = webClient
-                .post()
-                .uri("/findByIds")
-                .body(Mono.just(ids), new ParameterizedTypeReference<List<Integer>>() {
-                })
-                .retrieve()
-                .bodyToMono(List.class);
-        productDtoMono = productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
-        return productDtoMono;
-    }
 
 
     public List<ProductDtoData> fetchAllProducts (){

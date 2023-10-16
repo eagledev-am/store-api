@@ -75,6 +75,11 @@ public class WarehouseController {
         return new ResponseEntity<>(service.consumeProducts(warId , idsQuan) , HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/{warId}/check/product")
+    ResponseEntity<?> checkStockOfConsumedProduct(@PathVariable("warId") long warId , @RequestBody Map<Integer , Integer> idsQuan){
+        return new ResponseEntity<>(service.checkStockOfConsumedProduct(warId , idsQuan) , HttpStatus.ACCEPTED);
+    }
+
     @GetMapping("/{id}/inventories")
     ResponseEntity<?> getAllInventoriesOfWarehouse(@PathVariable long id){
         return new ResponseEntity<>(service.getAllInventoriesOfWarehouse(id) , HttpStatus.OK);
