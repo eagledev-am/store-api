@@ -1,5 +1,7 @@
 package com.fawry.store.externalapi;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawry.store.dtos.PostProductDto;
 import com.fawry.store.dtos.ProductDto;
 import com.fawry.store.dtos.ProductDtoData;
@@ -22,7 +24,7 @@ public class FetchProductData {
     final String URL = "http://localhost:5000/products";
 
 
-    public Mono<?> fetchProduct (ProductDtoEnum dtoEnum, long productId){
+    public Object fetchProduct (ProductDtoEnum dtoEnum, long productId){
         WebClient webClient = WebClient.create(URL);
         Mono<?> productDtoMono = null;
         switch (dtoEnum){
@@ -31,26 +33,28 @@ public class FetchProductData {
                         .uri("/{id}", productId)
                         .retrieve()
                         .bodyToMono(ProductDto.class);
-                break;
+                productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
+                return  productDtoMono.block();
             }
             case POST: {
                 productDtoMono = webClient.get()
                         .uri("/{id}", productId)
                         .retrieve()
                         .bodyToMono(PostProductDto.class);
-                break;
+                productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
+                return  productDtoMono.block();
             }
             case GET_ALL:{
                 productDtoMono = webClient.get()
                         .uri("/{id}", productId)
                         .retrieve()
                         .bodyToMono(ProductDtoData.class);
-                break;
+                productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
+                return  productDtoMono.block();
             }
         }
-
-        productDtoMono = productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
-        return productDtoMono;
+        productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
+        return null;
     }
 
     public Mono<List> fetchProductsOfWarehouse(List<Long> ids){
@@ -67,7 +71,7 @@ public class FetchProductData {
     }
 
 
-    public Mono<?> fetchAllProducts (){
+    public List<ProductDtoData> fetchAllProducts (){
         WebClient webClient = WebClient.create(URL);
         Mono<List> productDtoMono = webClient
                 .get()
@@ -75,10 +79,11 @@ public class FetchProductData {
                 .retrieve()
                 .bodyToMono(List.class);
         productDtoMono = productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
-        return productDtoMono;
+        ObjectMapper mapper1 = new ObjectMapper();
+        return mapper1.convertValue(productDtoMono.block(), new TypeReference<List<ProductDtoData>>() { });
     }
 
-    public   Mono<List> fetchSearchedProducts(String text){
+    public   List<ProductDtoData> fetchSearchedProducts(String text){
         WebClient webClient = WebClient.create(URL);
         Mono<List> productDtoMono = webClient
                 .post()
@@ -90,7 +95,8 @@ public class FetchProductData {
                 .retrieve()
                 .bodyToMono(List.class);
         productDtoMono = productDtoMono.switchIfEmpty(Mono.error(new NoSuchEntityException(PRODUCT_NOT_FOUND)));
-        return productDtoMono;
+        ObjectMapper mapper1 = new ObjectMapper();
+        return mapper1.convertValue(productDtoMono.block(), new TypeReference<List<ProductDtoData>>() { });
     }
 
 

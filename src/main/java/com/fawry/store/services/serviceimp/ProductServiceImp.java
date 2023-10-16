@@ -72,13 +72,11 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<ProductDtoData> getAllFetchedProducts() {
-        List<ProductDtoData> productDtoData = (List<ProductDtoData>) productData.fetchAllProducts().block();
-        return productDtoData;
+        return productData.fetchAllProducts();
     }
 
     @Override
     public List<ProductDtoData> getSearchedProducts(String text) {
-        ObjectMapper mapper1 = new ObjectMapper();
-        return mapper1.convertValue(productData.fetchSearchedProducts(text).block(), new TypeReference<List<ProductDtoData>>() { });
+        return productData.fetchSearchedProducts(text);
     }
 }

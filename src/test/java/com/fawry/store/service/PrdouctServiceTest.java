@@ -1,5 +1,6 @@
 package com.fawry.store.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawry.store.dtos.ProductDto;
 import com.fawry.store.dtos.ProductDtoData;
 import com.fawry.store.entites.Product;
@@ -64,6 +65,16 @@ public class PrdouctServiceTest {
         List<ProductDto> Products =  service.getAllStockedProducts();
         // assert
         Assertions.assertThat(Products).isNotNull().hasSize(1);
+    }
+
+    @Test
+    void testGetFetchedProducts(){
+        // arrange
+
+
+        // act
+
+        // assert
     }
 
     @Test

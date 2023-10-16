@@ -125,7 +125,7 @@ public class WarehouseServiceImp implements WarehouseService {
 
         if(warehouseInventory.isEmpty()){
 
-            ProductDto productDto = (ProductDto) productData.fetchProduct(ProductDtoEnum.GET , productId).block();
+            ProductDto productDto = (ProductDto) productData.fetchProduct(ProductDtoEnum.GET , productId);
 
 
             Product product = productMapper.toProduct(productDto);
@@ -204,7 +204,7 @@ public class WarehouseServiceImp implements WarehouseService {
          return getProductIds(warehouse)
                 .stream()
                 .map(id -> {
-                    ProductDtoData data = (ProductDtoData) productData.fetchProduct(ProductDtoEnum.GET_ALL,id).block();
+                    ProductDtoData data = (ProductDtoData) productData.fetchProduct(ProductDtoEnum.GET_ALL,id);
                     return data;
                 })
                 .toList();
@@ -213,8 +213,7 @@ public class WarehouseServiceImp implements WarehouseService {
     @Override
     public List<ProductDtoData> getSearchedProductsOfWarehouse(long warehouseId, String text) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
-        ObjectMapper mapper1 = new ObjectMapper();
-        List<ProductDtoData> products = mapper1.convertValue(productData.fetchSearchedProducts(text).block(), new TypeReference<List<ProductDtoData>>() { });
+        List<ProductDtoData> products = productData.fetchSearchedProducts(text);
         List<Long> productsIds = getProductIds(warehouse);
         return products.stream()
                 .filter(p->Collections.binarySearch(productsIds , p.getId()) > -1)
@@ -267,7 +266,7 @@ public class WarehouseServiceImp implements WarehouseService {
             throw new ConsumeProductException(QUANTITY_GREATER_THAN_STOCK + " " + "Quantity = " + inventory.getProductQuantity());
         }
 
-        PostProductDto product= (PostProductDto) productData.fetchProduct(ProductDtoEnum.POST , productId).block();
+        PostProductDto product= (PostProductDto) productData.fetchProduct(ProductDtoEnum.POST , productId);
 
         inventory.setProductQuantity(inventory.getProductQuantity() - consumeQuan);
         StockHistory history = makeStockHistory(inventory , consumeQuan);

@@ -40,16 +40,21 @@ public class InventoryServiceTest {
 
     final String INVENTORY_NOT_FOUND = "INVENTORY_NOT_FOUND";
 
+
     @Test
     void testAllInventories(){
         // arrange
-        InventoryDto inventoryDto = new InventoryDto();inventoryDto.setProductQuantity(5);
-        Inventory inventory = new Inventory(5);
+        InventoryDto inventoryDto = new InventoryDto();
+        inventoryDto.setProductQuantity(5);
+        Inventory inventory = new Inventory();
+        inventory.setProductQuantity(5);
 
         when(repo.findAll()).thenReturn(List.of(inventory));
         when(mapper.toInventoryDto(inventory)).thenReturn(inventoryDto);
+
         // act
         List<InventoryDto> inventories =  service.getAllInventories();
+
         // assert
         Assertions.assertThat(inventories).isNotNull().hasSize(1);
     }
