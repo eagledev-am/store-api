@@ -46,6 +46,12 @@ public class Warehouse {
         this.name = name;
     }
 
+    public Warehouse(long id, String name, String location) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+    }
+
     public boolean createWarehouseInventory(Inventory inventory){
         return inventories.add(inventory);
     }

@@ -2,6 +2,7 @@ package com.fawry.store.entites;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -43,6 +44,10 @@ public class Inventory {
 
     public Inventory(Date date, long productQuantity) {
         this.date = date;
+        this.productQuantity = productQuantity;
+    }
+
+    public  Inventory(long productQuantity){
         this.productQuantity = productQuantity;
     }
 

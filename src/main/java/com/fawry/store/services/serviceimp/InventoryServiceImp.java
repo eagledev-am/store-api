@@ -55,7 +55,7 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     public InventoryDto updateInventory(long id, InventoryDto inventoryDto) {
-        Inventory inventory = repo.findById(id).orElseThrow(()-> new NoSuchElementException(INVENTORY_NOT_FOUND));
+        Inventory inventory = repo.findById(id).orElseThrow(()-> new NoSuchEntityException(INVENTORY_NOT_FOUND));
 
         inventory.setProductQuantity(inventoryDto.getProductQuantity());
 
@@ -64,20 +64,10 @@ public class InventoryServiceImp implements InventoryService {
 
     @Override
     public void destroyInventory(long id) {
-        Inventory inventory = repo.findById(id).orElseThrow();
+        Inventory inventory = repo.findById(id).orElseThrow(() -> new NoSuchEntityException(INVENTORY_NOT_FOUND));
         repo.delete(inventory);
     }
 
-    @Override
-    public long getQuantityOfProduct(long warehouseId, long productId) {
-        Inventory inventory = repo.findProductQuantity(warehouseId , productId)
-                .orElseThrow(()-> new NoSuchElementException(INVENTORY_NOT_FOUND));
-        return inventory.getProductQuantity();
-    }
 
 
-    @Override
-    public List<ProductDto> consumeProduct(long warehouseId, long productId, int consumedQuantity) {
-        return null;
-    }
 }

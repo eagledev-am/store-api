@@ -12,6 +12,4 @@ public interface InventoryService {
     InventoryDto createInventory(InventoryDto inventoryDto);
     InventoryDto updateInventory(long id , InventoryDto inventoryDto);
     void destroyInventory(long id);
-    long getQuantityOfProduct(long warehouseId , long productId);
-    List<ProductDto> consumeProduct(long warehouseId , long productId , int consumedQuantity);
 }

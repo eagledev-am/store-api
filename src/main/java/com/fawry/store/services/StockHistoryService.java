@@ -11,8 +11,6 @@ public interface StockHistoryService {
     List<StockHistoryDto> getAllHistories();
     List<StockHistoryDto> getHistoryOfProduct(long productId);
     List<StockHistoryDto> getHistoryOfWarehouse(long warehouseId);
-    StockHistoryDto makeHistory(StockHistoryDto historyDto);
     StockHistoryDto getHistory(long id);
-    StockHistoryDto addNewHistory(StockHistoryDto stockHistoryDto);
     void removeHistory(long id);
 }

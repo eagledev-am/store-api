@@ -2,6 +2,7 @@ package com.fawry.store.controller;
 
 import com.fawry.store.dtos.WarehouseDto;
 import com.fawry.store.entites.Product;
+import com.fawry.store.externalapi.FetchProductData;
 import com.fawry.store.services.WarehouseService;
 import com.fawry.store.services.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ public class WarehouseController {
     
     @Autowired
     WarehouseService service;
-    
+
+    @Autowired
+    FetchProductData data;
 
 
     @GetMapping
@@ -85,5 +88,10 @@ public class WarehouseController {
     @GetMapping("/{warId}/product/{productId}")
     ResponseEntity<?> getQuantityOfProduct(@PathVariable("warId") long warId , @PathVariable long productId){
         return new ResponseEntity<>(service.getProductQuantity(warId , productId) , HttpStatus.OK);
+    }
+
+    @GetMapping("/{warId}/search/product")
+    ResponseEntity<?> getSearchedProducts(@PathVariable long warId , @RequestParam String text){
+        return new ResponseEntity<>(service.getSearchedProductsOfWarehouse(warId , text) , HttpStatus.OK);
     }
 }

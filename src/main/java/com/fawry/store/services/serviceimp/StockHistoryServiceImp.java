@@ -52,10 +52,6 @@ public class StockHistoryServiceImp implements StockHistoryService {
                 .toList();
     }
 
-    @Override
-    public StockHistoryDto makeHistory(StockHistoryDto historyDto) {
-        return mapper.toStockHistoryDto(repo.save(mapper.toStockHistory(historyDto)));
-    }
 
     @SneakyThrows
     @Override
@@ -64,12 +60,7 @@ public class StockHistoryServiceImp implements StockHistoryService {
                 .orElseThrow(()-> new NoSuchEntityException(STOCK_HISTORY_NOT_FOUND)));
     }
 
-    @Override
-    public StockHistoryDto addNewHistory(StockHistoryDto stockHistoryDto) {
-        stockHistoryDto.setDate(new Date());
-        stockHistoryDto.setTime(new Date());
-        return mapper.toStockHistoryDto(repo.save(mapper.toStockHistory(stockHistoryDto)));
-    }
+
 
     @Override
     public void removeHistory(long id) {

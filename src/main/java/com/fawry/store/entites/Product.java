@@ -18,7 +18,7 @@ public class Product {
     @Id
     long id;
 
-    @Column(name = "name")
+    @Column(name = "title")
     String name;
 
     @Column(name = "price")

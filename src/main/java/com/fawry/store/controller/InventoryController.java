@@ -43,9 +43,5 @@ public class InventoryController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/warehouse/{warId}/product/{productId}")
-    ResponseEntity<?> getQuantityOfProductAtWarehouse(@PathVariable("warId") long warehouseId , @PathVariable("productId") long productId){
-        return new ResponseEntity<> (service.getQuantityOfProduct(warehouseId , productId) , HttpStatus.OK);
-    }
 
 }

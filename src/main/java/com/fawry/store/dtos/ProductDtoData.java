@@ -1,5 +1,6 @@
 package com.fawry.store.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,4 +16,6 @@ public class ProductDtoData {
     String categoryName;
 
     String imageUrl;
+    @JsonIgnore
+    String categoryId;
 }

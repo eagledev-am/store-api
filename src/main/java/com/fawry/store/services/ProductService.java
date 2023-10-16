@@ -13,5 +13,6 @@ public interface ProductService {
     void removeProduct(long id);
 
     List<ProductDtoData> getAllFetchedProducts();
+    List<ProductDtoData> getSearchedProducts(String text);
 
 }

@@ -18,6 +18,7 @@ public interface WarehouseService {
     PostProductDtoQuantity getProductQuantity(long warehouseId , long productId);
     List<PostProductDto> consumeProducts(long warehouseId , Map<Integer , Integer> IdsQuantity);
     PostProductDto consumeProduct(long warehouseId , long productId , long consumeQuan);
-
     List<ProductDtoData> getProductsOfWarehouse(long warehouseId);
+    List<ProductDtoData> getSearchedProductsOfWarehouse(long warehouseId , String text);
+
 }

@@ -1,5 +1,7 @@
 package com.fawry.store.services.serviceimp;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawry.store.dtos.*;
 //import com.fawry.store.entites.Product;
 import com.fawry.store.dtos.enums.ProductDtoEnum;
@@ -198,7 +200,7 @@ public class WarehouseServiceImp implements WarehouseService {
     @Override
     public List<ProductDtoData> getProductsOfWarehouse(long warehouseId) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
-//        return (List<ProductDtoData>) productData.fetchProductsOfWarehouse(getProductIds(warehouse)).block();
+
          return getProductIds(warehouse)
                 .stream()
                 .map(id -> {
@@ -208,6 +210,16 @@ public class WarehouseServiceImp implements WarehouseService {
                 .toList();
     }
 
+    @Override
+    public List<ProductDtoData> getSearchedProductsOfWarehouse(long warehouseId, String text) {
+        Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
+        ObjectMapper mapper1 = new ObjectMapper();
+        List<ProductDtoData> products = mapper1.convertValue(productData.fetchSearchedProducts(text).block(), new TypeReference<List<ProductDtoData>>() { });
+        List<Long> productsIds = getProductIds(warehouse);
+        return products.stream()
+                .filter(p->Collections.binarySearch(productsIds , p.getId()) > -1)
+                .toList();
+    }
 
 
     private StockHistory makeStockHistory(Inventory inventory , long quantity){

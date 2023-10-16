@@ -45,7 +45,9 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-
+    @GetMapping("/search")
+    ResponseEntity<?> getSearchedProducts(@RequestParam String text){
+        return new ResponseEntity<>(service.getSearchedProducts(text) , HttpStatus.OK);
+    }
 }
 

@@ -1,5 +1,7 @@
 package com.fawry.store.services.serviceimp;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fawry.store.dtos.ProductDto;
 import com.fawry.store.dtos.ProductDtoData;
 import com.fawry.store.entites.Product;
@@ -49,7 +51,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductDto updateProduct(Long id, ProductDto productDto) {
-        Product product = repo.findById(id).orElseThrow(()-> new NoSuchElementException(PRODUCT_NOT_FOUND));
+        Product product = repo.findById(id).orElseThrow(()-> new NoSuchEntityException(PRODUCT_NOT_FOUND));
 
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
@@ -64,7 +66,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void removeProduct(long id) {
-        Product product = repo.findById(id).orElseThrow(()-> new NoSuchElementException(PRODUCT_NOT_FOUND));
+        Product product = repo.findById(id).orElseThrow(()-> new NoSuchEntityException(PRODUCT_NOT_FOUND));
         repo.delete(product);
     }
 
@@ -72,5 +74,11 @@ public class ProductServiceImp implements ProductService {
     public List<ProductDtoData> getAllFetchedProducts() {
         List<ProductDtoData> productDtoData = (List<ProductDtoData>) productData.fetchAllProducts().block();
         return productDtoData;
+    }
+
+    @Override
+    public List<ProductDtoData> getSearchedProducts(String text) {
+        ObjectMapper mapper1 = new ObjectMapper();
+        return mapper1.convertValue(productData.fetchSearchedProducts(text).block(), new TypeReference<List<ProductDtoData>>() { });
     }
 }
