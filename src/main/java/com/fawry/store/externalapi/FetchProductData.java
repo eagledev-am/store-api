@@ -71,6 +71,7 @@ public class FetchProductData {
         return mapper1.convertValue(productDtoMono.block(), new TypeReference<List<ProductDtoData>>() { });
     }
 
+
     public   List<ProductDtoData> fetchSearchedProducts(String text){
         WebClient webClient = WebClient.create(URL);
         Mono<List> productDtoMono = webClient

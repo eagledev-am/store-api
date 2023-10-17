@@ -152,6 +152,8 @@ public class WarehouseServiceImp implements WarehouseService {
         return inventoryMapper.toInventoryDto(inventory);
     }
 
+
+
     @Override
     public PostProductDtoQuantity getProductQuantity(long warehouseId , long productId) {
         Warehouse warehouse = repo.findById(warehouseId).orElseThrow(()-> new NoSuchEntityException(WAREHOUSE_NOT_FOUND));
@@ -188,6 +190,7 @@ public class WarehouseServiceImp implements WarehouseService {
         return consumedProducts;
     }
 
+
     @Override
     public List<PostProductDto> checkStockOfConsumedProduct(long warehouseId, Map<Integer, Integer> idsQuantity) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
@@ -210,10 +213,10 @@ public class WarehouseServiceImp implements WarehouseService {
     }
 
 
+
     @Override
     public List<ProductDtoData> getProductsOfWarehouse(long warehouseId) {
         Warehouse warehouse = mapper.toWarehouse(getWarehouse(warehouseId));
-
          return getProductIds(warehouse)
                 .stream()
                 .map(id -> {
@@ -222,6 +225,7 @@ public class WarehouseServiceImp implements WarehouseService {
                 })
                 .toList();
     }
+
 
     @Override
     public List<ProductDtoData> getSearchedProductsOfWarehouse(long warehouseId, String text) {
@@ -261,6 +265,7 @@ public class WarehouseServiceImp implements WarehouseService {
                 .map(inventory -> inventory.getProduct().getId())
                 .toList();
     }
+
 
     private PostProductDtoQuantity getConsumedProduct(Warehouse warehouse , List<Inventory> inventories , long productId, long consumeQuan){
 
