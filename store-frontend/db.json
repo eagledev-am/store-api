@@ -1,0 +1,16 @@
+{
+  "warehouses": [
+    {
+      "name": "w1",
+      "address": "address",
+      "location": "updatedLocation",
+      "id": 1
+    },
+    {
+      "name": "w2",
+      "address": "addressa",
+      "location": "location",
+      "id": 2
+    }
+  ]
+}
